@@ -16,37 +16,38 @@ API RESTful para gerenciamento de vendas, clientes, produtos e progresso de comp
 
 ## Estrutura do Projeto
 ```
-gerenciamento-vendas-api/
-├── package.json
-├── README.md
-├── resources/
-│   └── swagger.yaml
-└── src/
-    ├── app.js
-    ├── controllers/
-    │   ├── authController.js
-    │   ├── clientController.js
-    │   ├── productController.js
-    │   └── saleController.js
-    ├── middleware/
-    │   └── authMiddleware.js
-    ├── models/
-    │   ├── ClientProgress.js
-    │   ├── Product.js
-    │   ├── Sale.js
-    │   └── User.js
-    ├── routes/
-    │   ├── authRoutes.js
-    │   ├── clientRoutes.js
-    │   ├── productRoutes.js
-    │   └── saleRoutes.js
-    └── services/
-        ├── authService.js
-        ├── clientProgressService.js
-        ├── database.js
-        ├── productService.js
-        ├── saleService.js
-        └── userService.js
+resources/
+  └── swagger.yaml
+src/
+  controllers/
+    ├── authController.js
+    ├── clientController.js
+    ├── productController.js
+    └── saleController.js
+  middleware/
+    └── authMiddleware.js
+  models/
+    ├── ClientProgress.js
+    ├── Product.js
+    ├── Sale.js
+    └── User.js
+  routes/
+    ├── authRoutes.js
+    ├── clientRoutes.js
+    ├── productRoutes.js
+    └── saleRoutes.js
+  services/
+    ├── authService.js
+    ├── clientProgressService.js
+    ├── database.js
+    ├── productService.js
+    ├── saleService.js
+    └── userService.js
+  app.js
+.gitignore
+package-lock.json
+package.json
+README.md
 ```
 
 ## Como executar
