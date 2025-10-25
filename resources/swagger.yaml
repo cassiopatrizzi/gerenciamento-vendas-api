@@ -1,0 +1,404 @@
+openapi: 3.0.0
+info:
+  title: API Gerenciamento de Vendas
+  version: 1.0.0
+  description: API para gerenciamento de vendas, clientes, produtos e progresso de compras.
+servers:
+  - url: http://localhost:3000
+paths:
+  /auth/register:
+    post:
+      summary: Registrar novo usuário (cliente ou vendedor)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, role]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum: [vendedor, cliente]
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        '400':
+          description: Dados obrigatórios ausentes
+        '409':
+          description: Email já cadastrado
+  /auth/login:
+    post:
+      summary: Login de usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Credenciais inválidas
+  /products:
+    post:
+      summary: Registrar novo produto
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, price, stock]
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                stock:
+                  type: integer
+      responses:
+        '201':
+          description: Produto criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Dados obrigatórios ausentes
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+  get:
+      summary: Listar produtos
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '401':
+          description: Token não fornecido ou inválido
+  /products/{id}:
+    get:
+    delete:
+      summary: Deletar produto por ID (apenas vendedor)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do produto
+      responses:
+        '204':
+          description: Produto deletado com sucesso
+        '404':
+          description: Produto não encontrado
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+  /auth/user/{id}:
+    delete:
+      summary: Deletar usuário (cliente ou vendedor) por ID (apenas vendedor)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      responses:
+        '204':
+          description: Usuário deletado com sucesso
+        '404':
+          description: Usuário não encontrado
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+      summary: Buscar produto por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Produto não encontrado
+        '401':
+          description: Token não fornecido ou inválido
+  /sales:
+    post:
+      summary: Registrar venda
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [clientId, products]
+              properties:
+                clientId:
+                  type: integer
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productId:
+                        type: integer
+                      quantity:
+                        type: integer
+      responses:
+        '201':
+          description: Venda registrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+        '400':
+          description: Dados obrigatórios ausentes
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+  /sales/seller:
+    get:
+      summary: Listar vendas do vendedor
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de vendas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sale'
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+  /sales/client:
+    get:
+      summary: Listar compras do cliente
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de compras
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sale'
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+  /client/progress:
+    get:
+      summary: Consultar progresso do cliente
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Progresso do cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientProgress'
+        '404':
+          description: Progresso não encontrado
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+  /client/data:
+    get:
+      summary: Consultar dados do cliente autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dados do cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                exemplo:
+                  value:
+                    id: 0
+                    name: string
+                    email: string
+                    role: string
+              examples:
+                exemplo:
+                  value:
+                    id: 0
+                    name: string
+                    email: string
+                    role: string
+        '404':
+          description: Cliente não encontrado
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+  /client/data/{id}:
+    get:
+      summary: Consultar dados de qualquer cliente por ID (apenas vendedor)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do cliente
+      responses:
+        '200':
+          description: Dados do cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Cliente não encontrado
+        '401':
+          description: Token não fornecido ou inválido
+        '403':
+          description: Acesso negado
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+        stock:
+          type: integer
+    Sale:
+      type: object
+      properties:
+        id:
+          type: integer
+        sellerId:
+          type: integer
+        clientId:
+          type: integer
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: integer
+              quantity:
+                type: integer
+        date:
+          type: string
+          format: date-time
+    ClientProgress:
+      type: object
+      properties:
+        clientId:
+          type: integer
+        orders:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: integer
+              quantity:
+                type: integer
+        purchases:
+          type: array
+          items:
+            type: object
+            properties:
+              saleId:
+                type: integer
+              productId:
+                type: integer
+              quantity:
+                type: integer
