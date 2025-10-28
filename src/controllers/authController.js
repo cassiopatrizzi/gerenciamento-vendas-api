@@ -2,9 +2,16 @@ const { createUser, findUserByEmail, deleteUserById } = require('../services/use
 const { generateToken } = require('../services/authService');
 
 function register(req, res) {
+  if (!req.user || req.user.role !== 'administrador') {
+    return res.status(403).json({ error: 'Apenas administradores podem cadastrar novos usuários' });
+  }
   const { name, email, password, role } = req.body;
   if (!name || !email || !password || !role) {
     return res.status(400).json({ error: 'Dados obrigatórios ausentes' });
+  }
+  const allowedRoles = ['admin', 'vendedor', 'cliente'];
+  if (!allowedRoles.includes(role)) {
+    return res.status(400).json({ error: 'Regra inválida. Use: admin, vendedor ou cliente.' });
   }
   if (findUserByEmail(email)) {
     return res.status(409).json({ error: 'Email já cadastrado' });
@@ -23,7 +30,6 @@ function login(req, res) {
   const token = generateToken(user);
   res.json({ token });
 }
-
 
 function deleteUser(req, res) {
   const { id } = req.params;

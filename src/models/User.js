@@ -4,7 +4,7 @@ class User {
     this.name = name;
     this.email = email;
     this.password = password;
-    this.role = role; // 'vendedor' ou 'cliente'
+    this.role = role; // 'admin', 'vendedor' ou 'cliente'
   }
 }
 

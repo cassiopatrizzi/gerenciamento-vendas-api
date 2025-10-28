@@ -4,7 +4,7 @@ const { register, login, deleteUser } = require('../controllers/authController')
 const { authenticate } = require('../middleware/authMiddleware');
 
 
-router.post('/register', register);
+router.post('/register', authenticate(), register);
 router.post('/login', login);
 router.delete('/user/:id', authenticate('vendedor'), deleteUser);
 

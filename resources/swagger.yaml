@@ -3,47 +3,25 @@ info:
   title: API Gerenciamento de Vendas
   version: 1.0.0
   description: API para gerenciamento de vendas, clientes, produtos e progresso de compras.
+tags:
+  - name: Login
+    description: Endpoints de autenticação/login
+  - name: Cadastro
+    description: Endpoints de cadastro de usuários
+  - name: Produtos
+    description: Endpoints de gerenciamento de produtos
+  - name: Usuários
+    description: Endpoints de gerenciamento de usuários
+  - name: Vendas
+    description: Endpoints de vendas e compras
+  - name: Clientes
+    description: Endpoints de dados e progresso do cliente
 servers:
   - url: http://localhost:3000
 paths:
-  /auth/register:
-    post:
-      summary: Registrar novo usuário (cliente ou vendedor)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [name, email, password, role]
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-                role:
-                  type: string
-                  enum: [vendedor, cliente]
-      responses:
-        '201':
-          description: Usuário criado com sucesso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  user:
-                    $ref: '#/components/schemas/User'
-                  token:
-                    type: string
-        '400':
-          description: Dados obrigatórios ausentes
-        '409':
-          description: Email já cadastrado
   /auth/login:
     post:
+      tags: [Login]
       summary: Login de usuário
       requestBody:
         required: true
@@ -69,8 +47,50 @@ paths:
                     type: string
         '401':
           description: Credenciais inválidas
+  /auth/register:
+    post:
+      tags: [Cadastro]
+      summary: Registrar novo usuário (cliente ou vendedor - somente usuários permitidos)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, role]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum: [cliente, vendedor, admin]
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        '400':
+          description: Dados obrigatórios ausentes
+        '403':
+          description: Apenas administradores podem cadastrar novos usuários  
+        '409':
+          description: Email já cadastrado
   /products:
     post:
+      tags: [Produtos]
       summary: Registrar novo produto
       security:
         - bearerAuth: []
@@ -101,8 +121,9 @@ paths:
           description: Token não fornecido ou inválido
         '403':
           description: Acesso negado
-  get:
-      summary: Listar produtos
+    get:
+      tags: [Produtos]
+      summary: Listar todos os produtos
       security:
         - bearerAuth: []
       responses:
@@ -118,7 +139,30 @@ paths:
           description: Token não fornecido ou inválido
   /products/{id}:
     get:
+      tags: [Produtos]
+      summary: Buscar produto por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do produto
+      responses:
+        '200':
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Produto não encontrado
+        '401':
+          description: Token não fornecido ou inválido
     delete:
+      tags: [Produtos]
       summary: Deletar produto por ID (apenas vendedor)
       security:
         - bearerAuth: []
@@ -140,6 +184,7 @@ paths:
           description: Acesso negado
   /auth/user/{id}:
     delete:
+      tags: [Usuários]
       summary: Deletar usuário (cliente ou vendedor) por ID (apenas vendedor)
       security:
         - bearerAuth: []
@@ -181,6 +226,7 @@ paths:
           description: Token não fornecido ou inválido
   /sales:
     post:
+      tags: [Vendas]
       summary: Registrar venda
       security:
         - bearerAuth: []
@@ -218,6 +264,7 @@ paths:
           description: Acesso negado
   /sales/seller:
     get:
+      tags: [Vendas]
       summary: Listar vendas do vendedor
       security:
         - bearerAuth: []
@@ -236,6 +283,7 @@ paths:
           description: Acesso negado
   /sales/client:
     get:
+      tags: [Vendas]
       summary: Listar compras do cliente
       security:
         - bearerAuth: []
@@ -254,6 +302,7 @@ paths:
           description: Acesso negado
   /client/progress:
     get:
+      tags: [Clientes]
       summary: Consultar progresso do cliente
       security:
         - bearerAuth: []
@@ -272,6 +321,7 @@ paths:
           description: Acesso negado
   /client/data:
     get:
+      tags: [Clientes]
       summary: Consultar dados do cliente autenticado
       security:
         - bearerAuth: []
@@ -304,6 +354,7 @@ paths:
           description: Acesso negado
   /client/data/{id}:
     get:
+      tags: [Clientes]
       summary: Consultar dados de qualquer cliente por ID (apenas vendedor)
       security:
         - bearerAuth: []

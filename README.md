@@ -4,9 +4,9 @@
 API RESTful para gerenciamento de vendas, clientes, produtos e progresso de compras. Desenvolvida em Node.js com Express, autenticação JWT e documentação Swagger.
 
 ## Funcionalidades
-- Login de vendedores e clientes
+- Login de administradores, vendedores e clientes
 - Registro de produtos
-- Registro de clientes e vendedores
+- Registro de administradores, clientes e vendedores
 - Busca de produtos
 - Busca de dados do cliente
 - Registro de vendas realizadas pelo vendedor
@@ -62,7 +62,7 @@ README.md
 3. Acesse a documentação Swagger em: [http://localhost:3000/api-docs]
 
 ## Autenticação
-- Utilize o endpoint `/auth/register` para criar usuários (cliente ou vendedor). O token JWT é retornado na resposta.
+- Utilize o endpoint `/auth/register` para criar usuários (admin, cliente ou vendedor). O token JWT é retornado na resposta.
 - Para acessar endpoints protegidos, envie o token no header:
   ```
   Authorization: Bearer <token>
@@ -71,4 +71,4 @@ README.md
 
 ## Observações
 - Banco de dados em memória (os dados são perdidos ao reiniciar a aplicação).
-- Não há dados pré-existentes.
+- Dados pré-existentes do admin.

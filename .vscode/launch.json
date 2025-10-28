@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "http://localhost:3000/api-docs/#/Login/post_auth_login",
+            "request": "launch",
+            "url": "http://localhost:3000/api-docs/#/Login/post_auth_login"
+        }
+    ]
+}
