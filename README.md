@@ -33,7 +33,7 @@ src/
     └── User.js
   routes/
     ├── authRoutes.js
-    ├── clientRoutes.js
+    ├── userRoutes.js
     ├── productRoutes.js
     └── saleRoutes.js
   services/

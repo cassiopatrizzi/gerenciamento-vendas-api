@@ -7,7 +7,7 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const saleRoutes = require('./routes/saleRoutes');
-const clientRoutes = require('./routes/clientRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/sales', saleRoutes);
-app.use('/client', clientRoutes);
+app.use('/user', userRoutes);
 
 // Swagger
 const swaggerFile = path.join(__dirname, '../resources/swagger.yaml');

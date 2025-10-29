@@ -26,4 +26,8 @@ function deleteUserById(id) {
   return false;
 }
 
-module.exports = { createUser, findUserByEmail, findUserById, deleteUserById };
+function getAllClients() {
+  return db.users;
+}
+
+module.exports = { createUser, findUserByEmail, findUserById, deleteUserById, getAllClients };

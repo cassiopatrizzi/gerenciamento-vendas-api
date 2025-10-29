@@ -5,7 +5,7 @@ const { authenticate } = require('../middleware/authMiddleware');
 
 
 router.get('/progress', authenticate('cliente'), getProgress);
-router.get('/data', authenticate('cliente'), getClientData);
-router.get('/data/:id', authenticate('vendedor'), getClientDataById);
+router.get('/data', authenticate('administrador', 'cliente'), getClientData);
+router.get('/data/:id', authenticate('administrador', 'vendedor'), getClientDataById);
 
 module.exports = router;
