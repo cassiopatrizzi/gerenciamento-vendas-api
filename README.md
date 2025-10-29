@@ -33,9 +33,9 @@ src/
     └── User.js
   routes/
     ├── authRoutes.js
-    ├── userRoutes.js
     ├── productRoutes.js
-    └── saleRoutes.js
+    ├── saleRoutes.js
+    └── userRoutes.js
   services/
     ├── authService.js
     ├── clientProgressService.js
