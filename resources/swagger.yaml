@@ -319,15 +319,15 @@ paths:
           description: Token não fornecido ou inválido
         '403':
           description: Acesso negado
-  /client/data:
+  /user/data:
     get:
-      tags: [Clientes]
-      summary: Consultar dados do cliente autenticado
+      tags: [Clientes-Usuários]
+      summary: Consultar dados dos clientes ou usuários
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Dados do cliente
+          description: Dados dos clientes ou usuários
           content:
             application/json:
               schema:
@@ -347,15 +347,15 @@ paths:
                     email: string
                     role: string
         '404':
-          description: Cliente não encontrado
+          description: Cliente / usuário não encontrado
         '401':
           description: Token não fornecido ou inválido
         '403':
           description: Acesso negado
-  /client/data/{id}:
+  /user/data/{id}:
     get:
-      tags: [Clientes]
-      summary: Consultar dados de qualquer cliente por ID (apenas vendedor)
+      tags: [Clientes-Usuários]
+      summary: Consultar dados de qualquer cliente ou usuário por ID (apenas vendedor)
       security:
         - bearerAuth: []
       parameters:
@@ -364,16 +364,16 @@ paths:
           schema:
             type: integer
           required: true
-          description: ID do cliente
+          description: ID do cliente ou usuário
       responses:
         '200':
-          description: Dados do cliente
+          description: Dados do cliente ou usuário
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '404':
-          description: Cliente não encontrado
+          description: Cliente / usuário não encontrado
         '401':
           description: Token não fornecido ou inválido
         '403':
